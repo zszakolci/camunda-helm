@@ -1,0 +1,86 @@
+# Reduce for Zeebe and Gateway the configured replicas and with that the required resources
+# to get it running locally
+zeebe:
+  clusterSize: 1
+  partitionCount: 1
+  replicationFactor: 1
+  pvcSize: 5Gi
+  resources:
+    limits:
+      memory: 4Gi
+    requests:
+      memory: 1Gi
+
+zeebe-gateway:
+  replicas: 1
+
+
+# Configure elastic search to make it running for local development
+elasticsearch:
+  replicas: 1
+  minimumMasterNodes: 1
+  # Allow no backup for single node setups
+  clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
+  resources:
+    limits: 
+      memory: 2Gi
+    requests:
+      memory: 2Gi
+
+  # Request smaller persistent volumes.
+  volumeClaimTemplate:
+    accessModes: [ "ReadWriteOnce" ]
+    storageClassName: "standard"
+    resources:
+      requests:
+        storage: 15Gi
+identity:
+  keycloak:
+    image:
+      repository: "keycloak-arm"
+      tag: latest
+    resources:
+      requests:
+        memory: 512Mi
+      limits: 
+        memory: 2Gi
+
+webModeler:
+  enabled: true
+  image:
+    pullSecrets:
+      - name: dev-c8-registry
+  restapi:
+    mail:
+      # Restapi.mail.smtpHost defines the host name of the SMTP server to be used by Web Modeler
+      smtpHost: ""
+      # Restapi.mail.smtpPort defines the port number of the SMTP server
+      smtpPort: 587
+      # Restapi.mail.smtpUser can be used to provide a user for the SMTP server
+      smtpUser: ""
+      # Restapi.mail.smtpPassword can be used to provide a password for the SMTP server
+      smtpPassword: ""
+      # Restapi.mail.smtpTlsEnabled if true, enforces TLS encryption for SMTP connections (using STARTTLS)
+      smtpTlsEnabled: true
+      # Restapi.mail.fromAddress defines the email address that will be displayed as the sender of emails sent by Web Modeler
+      fromAddress: "no-reply@camunda.com"
+      # Restapi.mail.fromName defines the name that will be displayed as the sender of emails sent by Web Modeler
+      fromName: "Camunda Platform"
+    resources:
+      requests:
+        memory: 512Mi
+      limits: 
+        memory: 2Gi
+
+  webapp:
+    resources:
+      requests:
+        memory: 512Mi
+      limits: 
+        memory: 2Gi
+
+  postgresql:
+    enabled: true
+  prometheusServiceMonitor:
+   # PrometheusServiceMonitor.enabled if true then a service monitor will be deployed, which allows an installed prometheus controller to scrape metrics from the deployed pods
+    enabled: true

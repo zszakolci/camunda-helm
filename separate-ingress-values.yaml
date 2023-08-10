@@ -1,0 +1,285 @@
+global:
+  image:
+    tag: 8.2.11
+    # pullSecrets: 
+    # - name: dev-c8-registry
+  identity:
+    auth:
+      publicIssuerUrl: "https://keycloak.local.distro.ultrawombat.com/auth/realms/camunda-platform"
+      operate:
+        redirectUrl: "https://operate.local.distro.ultrawombat.com"
+      optimize:
+        redirectUrl: "https://optimize.local.distro.ultrawombat.com"
+      tasklist:
+        redirectUrl: "https://tasklist.local.distro.ultrawombat.com"
+      webModeler:
+        redirectUrl: "https://modeler.local.distro.ultrawombat.com"    
+
+connectors:
+  enabled: true
+  ingress:
+    # Ingress.enabled if true, an ingress resource is deployed with the Connectors deployment. Only useful if an ingress controller is available, like nginx.
+    enabled: true
+    # Ingress.className defines the class or configuration of ingress which should be used by the controller
+    className: nginx
+    # Ingress.annotations defines the ingress related annotations, consumed mostly by the ingress controller
+    annotations:
+      ingress.kubernetes.io/rewrite-target: "/"
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # Ingress.path defines the path which is associated with the Connectors service and port https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+    path: /
+    # Ingress.host can be used to define the host of the ingress rule. https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+    # If not specified the rules applies to all inbound http traffic, if specified the rule applies to that host.
+    host: "connector.local.distro.ultrawombat.com"
+    # Ingress.tls configuration for tls on the ingress resource https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
+    tls:
+      # Ingress.tls.enabled if true, then tls is configured on the ingress resource. If enabled the Ingress.host need to be defined.
+      enabled: true
+      # Ingress.tls.secretName defines the secret name which contains the TLS private key and certificate
+      secretName: "local-distro-ultrawombat"
+
+  # image:
+  #   tag: nonroot
+#prometheusServiceMonitor:
+#  enabled: true
+
+identity:
+  fullURL: "https://identity.local.distro.ultrawombat.com"
+  firstUser:
+    enabled: true
+    username: zalan
+    password: zalan
+    email: zalan.szakolci@camunda.com
+    firstName: Zalan
+    lastName: Szakolci
+  ingress:
+    enabled: true
+    annotations:
+      ingress.kubernetes.io/rewrite-target: "/"
+    path: /
+    host: identity.local.distro.ultrawombat.com
+    tls:
+      enabled: true
+      secretName: "local-distro-ultrawombat"
+  keycloak:
+    image:
+      repository: "keycloak-arm"
+      tag: latest
+    ingress:
+      ingressClassName: nginx
+      enabled: true
+      hostname: keycloak.local.distro.ultrawombat.com
+      extraTls:
+        - hosts:
+            - keycloak.local.distro.ultrawombat.com
+          secretName: local-distro-ultrawombat
+    proxy: edge
+    extraEnvVars:    
+      - name: KEYCLOAK_PROXY_ADDRESS_FORWARDING
+        value: "true"
+    postgresql:
+      enabled: true
+#     externalDatabase:
+#       database: camunda_keycloak
+#       host: 192.168.1.198
+#       port: 5432
+#       user: jesse
+#       password: jL10hCOwDGZgON
+  #   tolerations:
+  #   - key: "zeebe"
+  #     operator: "Equal"
+  #     value: "gpu"
+  #     effect: "NoSchedule"
+
+  # tolerations:
+  # - key: "zeebe"
+  #   operator: "Equal"
+  #   value: "gpu"
+  #   effect: "NoSchedule"
+    
+operate:
+  #image:
+    # tag: nonroot
+  ingress:
+    enabled: true
+    annotations:
+      ingress.kubernetes.io/rewrite-target: "/"
+    path: /
+    host: operate.local.distro.ultrawombat.com
+    tls:
+      enabled: true
+      secretName: "local-distro-ultrawombat"
+  # tolerations:
+  # - key: "zeebe"
+  #   operator: "Equal"
+  #   value: "gpu"
+  #   effect: "NoSchedule"
+  
+optimize:
+  environmentConfig:
+    es:
+      settings:
+        index:
+          number_of_shards: 5
+  ingress:
+    enabled: true
+    annotations:
+      ingress.kubernetes.io/rewrite-target: "/"
+    path: /
+    host: optimize.local.distro.ultrawombat.com
+    tls:
+      enabled: true
+      secretName: "local-distro-ultrawombat"
+  # tolerations:
+  # - key: "zeebe"
+  #   operator: "Equal"
+  #   value: "gpu"
+  #   effect: "NoSchedule"
+  
+tasklist:
+  #image:
+    # repository: tasklist_amd
+    # tag: nonroot
+  ingress:
+    enabled: true
+    annotations:
+      ingress.kubernetes.io/rewrite-target: "/"
+    path: /
+    host: tasklist.local.distro.ultrawombat.com
+    tls:
+      enabled: true
+      secretName: "local-distro-ultrawombat"
+  # tolerations:
+  # - key: "zeebe"
+  #   operator: "Equal"
+  #   value: "gpu"
+  #   effect: "NoSchedule"
+
+webModeler:
+  enabled: true
+  image:
+    pullSecrets:
+      - name: dev-c8-registry
+  ingress:
+    enabled: true    
+    annotations:
+      ingress.kubernetes.io/rewrite-target: "/"
+    webapp:      
+      host: modeler.local.distro.ultrawombat.com
+      tls:
+        enabled: true
+        secretName: "local-distro-ultrawombat"
+    websockets:
+      host: modeler-ws.local.distro.ultrawombat.com
+      tls:
+        enabled: true
+        secretName: "local-distro-ultrawombat"
+  restapi:
+    mail:
+      smtpHost: fakehost
+      smtpPort: 587
+      smtpUser: fakeuser
+      smtpPassword: fakepassword
+      # email address to be displayed as sender of emails from Web Modeler
+      fromAddress: fake@fake.com
+  webapp:
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+  #   tolerations:
+  #   - key: "zeebe"
+  #     operator: "Equal"
+  #     value: "gpu"
+  #     effect: "NoSchedule"
+  # websockets:
+  #   tolerations:
+  #   - key: "zeebe"
+  #     operator: "Equal"
+  #     value: "gpu"
+  #     effect: "NoSchedule"
+  # webapp:  
+  #   tolerations:
+  #   - key: "zeebe"
+  #     operator: "Equal"
+  #     value: "gpu"
+  #     effect: "NoSchedule"
+
+postgresql:
+  enabled: true
+
+zeebe:
+  # image:
+  #   tag: local
+  clusterSize: "1"
+  partitionCount: "1"
+  replicationFactor: "1"
+  podSecurityContext:
+    fsGroup: 1001
+  pvcSize: 4Gi
+  # tolerations:
+  # - key: "zeebe"
+  #   operator: "Equal"
+  #   value: "gpu"
+  #   effect: "NoSchedule"
+
+zeebe-gateway: 
+  replicas: 1
+  affinity: {}
+  ingress:
+    enabled: true
+    annotations:
+      ingress.kubernetes.io/rewrite-target: "/"
+      nginx.ingress.kubernetes.io/backend-protocol: "GRPC" 
+      ingress.kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    path: /
+    host: zeebe-gateway.local.distro.ultrawombat.com
+    tls:
+      enabled: true
+      secretName: "local-distro-ultrawombat"
+  # tolerations:
+  # - key: "zeebe"
+  #   operator: "Equal"
+  #   value: "gpu"
+  #   effect: "NoSchedule"
+  
+elasticsearch:
+  clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
+  replicas: 1
+  minimumMasterNodes: 1
+  antiAffinity: "soft"
+  ingress:
+    # Ingress.enabled if true, an ingress resource is deployed with the Connectors deployment. Only useful if an ingress controller is available, like nginx.
+    enabled: true
+    # Ingress.className defines the class or configuration of ingress which should be used by the controller
+    className: nginx
+    # Ingress.annotations defines the ingress related annotations, consumed mostly by the ingress controller
+    annotations:
+      ingress.kubernetes.io/rewrite-target: "/"
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # Ingress.path defines the path which is associated with the Connectors service and port https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+    path: /
+    # Ingress.host can be used to define the host of the ingress rule. https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+    # If not specified the rules applies to all inbound http traffic, if specified the rule applies to that host.
+    host: "elasticsearch.local.distro.ultrawombat.com"
+    # Ingress.tls configuration for tls on the ingress resource https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
+    tls:
+      # Ingress.tls.enabled if true, then tls is configured on the ingress resource. If enabled the Ingress.host need to be defined.
+      enabled: true
+      # Ingress.tls.secretName defines the secret name which contains the TLS private key and certificate
+      secretName: "local-distro-ultrawombat"
+  # tolerations:
+  # - key: "zeebe"
+  #   operator: "Equal"
+  #   value: "gpu"
+  #   effect: "NoSchedule"
+  volumeClaimTemplate:
+    accessModes: [ "ReadWriteOnce" ]
+    storageClassName: "standard"
+    resources:
+      requests:
+        storage: 4Gi

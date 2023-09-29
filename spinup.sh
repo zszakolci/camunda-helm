@@ -8,9 +8,9 @@ minikube start --kubernetes-version=v1.26.0 --bootstrapper=kubeadm --extra-confi
 
 kubectl create secret docker-registry dev-c8-registry \
                                       --docker-server=https://registry.camunda.cloud/ \
-                                      --docker-username=zalan.szakolci \
-                                      --docker-password='fE7MFZEjYrRY56tG' \
-                                      --docker-email=zalan.szakolci@camunda.com
+                                      --docker-username=<your-camunda-username> \
+                                      --docker-password='<your-camunda-sso-password>' \
+                                      --docker-email=<your-camunda-email>
 
 kubectl apply -f ./secret.yaml
 

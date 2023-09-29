@@ -1,6 +1,6 @@
 global:
   image:
-    tag: 8.2.11
+    tag: 8.2.13
     # pullSecrets: 
     # - name: dev-c8-registry
   identity:
@@ -40,8 +40,8 @@ connectors:
 
   # image:
   #   tag: nonroot
-#prometheusServiceMonitor:
-#  enabled: true
+prometheusServiceMonitor:
+  enabled: true
 
 identity:
   fullURL: "https://identity.local.distro.ultrawombat.com"
@@ -52,6 +52,7 @@ identity:
     email: zalan.szakolci@camunda.com
     firstName: Zalan
     lastName: Szakolci
+
   ingress:
     enabled: true
     annotations:
@@ -109,11 +110,9 @@ operate:
     tls:
       enabled: true
       secretName: "local-distro-ultrawombat"
-  # tolerations:
-  # - key: "zeebe"
-  #   operator: "Equal"
-  #   value: "gpu"
-  #   effect: "NoSchedule"
+  resources:
+      limits:
+        memory: 12Gi
   
 optimize:
   environmentConfig:
@@ -130,12 +129,10 @@ optimize:
     tls:
       enabled: true
       secretName: "local-distro-ultrawombat"
-  # tolerations:
-  # - key: "zeebe"
-  #   operator: "Equal"
-  #   value: "gpu"
-  #   effect: "NoSchedule"
-  
+
+  resources:
+      limits:
+        memory: 12Gi
 tasklist:
   #image:
     # repository: tasklist_amd
@@ -154,6 +151,9 @@ tasklist:
   #   operator: "Equal"
   #   value: "gpu"
   #   effect: "NoSchedule"
+  resources:
+      limits:
+        memory: 12Gi
 
 webModeler:
   enabled: true
@@ -189,7 +189,7 @@ webModeler:
         memory: 1Gi
       limits:
         cpu: 1000m
-        memory: 2Gi
+        memory: 12Gi
   #   tolerations:
   #   - key: "zeebe"
   #     operator: "Equal"
@@ -214,12 +214,20 @@ postgresql:
 zeebe:
   # image:
   #   tag: local
+  logLevel: debug
   clusterSize: "1"
   partitionCount: "1"
   replicationFactor: "1"
   podSecurityContext:
     fsGroup: 1001
   pvcSize: 4Gi
+  resources:
+    limits:
+      memory: 12Gi
+      cpu: 2
+    requests:
+      cpu: 400m
+
   # tolerations:
   # - key: "zeebe"
   #   operator: "Equal"
@@ -229,6 +237,9 @@ zeebe:
 zeebe-gateway: 
   replicas: 1
   affinity: {}
+  env:
+    - name: JAVA_TOOL_OPTIONS
+      value: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"
   ingress:
     enabled: true
     annotations:
@@ -252,26 +263,12 @@ elasticsearch:
   replicas: 1
   minimumMasterNodes: 1
   antiAffinity: "soft"
-  ingress:
-    # Ingress.enabled if true, an ingress resource is deployed with the Connectors deployment. Only useful if an ingress controller is available, like nginx.
-    enabled: true
-    # Ingress.className defines the class or configuration of ingress which should be used by the controller
-    className: nginx
-    # Ingress.annotations defines the ingress related annotations, consumed mostly by the ingress controller
-    annotations:
-      ingress.kubernetes.io/rewrite-target: "/"
-      nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    # Ingress.path defines the path which is associated with the Connectors service and port https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
-    path: /
-    # Ingress.host can be used to define the host of the ingress rule. https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
-    # If not specified the rules applies to all inbound http traffic, if specified the rule applies to that host.
-    host: "elasticsearch.local.distro.ultrawombat.com"
-    # Ingress.tls configuration for tls on the ingress resource https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
-    tls:
-      # Ingress.tls.enabled if true, then tls is configured on the ingress resource. If enabled the Ingress.host need to be defined.
-      enabled: true
-      # Ingress.tls.secretName defines the secret name which contains the TLS private key and certificate
-      secretName: "local-distro-ultrawombat"
+  resources:
+    limits:
+      cpu: 2
+      memory: 12Gi
+    requests:
+      cpu: 400m
   # tolerations:
   # - key: "zeebe"
   #   operator: "Equal"

@@ -1,6 +1,6 @@
 global:
   image:
-    tag: 8.2.13
+    tag: 8.2.15
     # pullSecrets: 
     # - name: dev-c8-registry
   identity:
@@ -38,8 +38,7 @@ connectors:
       # Ingress.tls.secretName defines the secret name which contains the TLS private key and certificate
       secretName: "local-distro-ultrawombat"
 
-  # image:
-  #   tag: nonroot
+
 prometheusServiceMonitor:
   enabled: true
 
@@ -80,27 +79,8 @@ identity:
         value: "true"
     postgresql:
       enabled: true
-#     externalDatabase:
-#       database: camunda_keycloak
-#       host: 192.168.1.198
-#       port: 5432
-#       user: jesse
-#       password: jL10hCOwDGZgON
-  #   tolerations:
-  #   - key: "zeebe"
-  #     operator: "Equal"
-  #     value: "gpu"
-  #     effect: "NoSchedule"
-
-  # tolerations:
-  # - key: "zeebe"
-  #   operator: "Equal"
-  #   value: "gpu"
-  #   effect: "NoSchedule"
     
 operate:
-  #image:
-    # tag: nonroot
   ingress:
     enabled: true
     annotations:
@@ -134,9 +114,7 @@ optimize:
       limits:
         memory: 12Gi
 tasklist:
-  #image:
-    # repository: tasklist_amd
-    # tag: nonroot
+
   ingress:
     enabled: true
     annotations:
@@ -146,11 +124,7 @@ tasklist:
     tls:
       enabled: true
       secretName: "local-distro-ultrawombat"
-  # tolerations:
-  # - key: "zeebe"
-  #   operator: "Equal"
-  #   value: "gpu"
-  #   effect: "NoSchedule"
+
   resources:
       limits:
         memory: 12Gi
@@ -190,30 +164,11 @@ webModeler:
       limits:
         cpu: 1000m
         memory: 12Gi
-  #   tolerations:
-  #   - key: "zeebe"
-  #     operator: "Equal"
-  #     value: "gpu"
-  #     effect: "NoSchedule"
-  # websockets:
-  #   tolerations:
-  #   - key: "zeebe"
-  #     operator: "Equal"
-  #     value: "gpu"
-  #     effect: "NoSchedule"
-  # webapp:  
-  #   tolerations:
-  #   - key: "zeebe"
-  #     operator: "Equal"
-  #     value: "gpu"
-  #     effect: "NoSchedule"
 
 postgresql:
   enabled: true
 
 zeebe:
-  # image:
-  #   tag: local
   logLevel: debug
   clusterSize: "1"
   partitionCount: "1"
@@ -227,12 +182,6 @@ zeebe:
       cpu: 2
     requests:
       cpu: 400m
-
-  # tolerations:
-  # - key: "zeebe"
-  #   operator: "Equal"
-  #   value: "gpu"
-  #   effect: "NoSchedule"
 
 zeebe-gateway: 
   replicas: 1
@@ -252,11 +201,6 @@ zeebe-gateway:
     tls:
       enabled: true
       secretName: "local-distro-ultrawombat"
-  # tolerations:
-  # - key: "zeebe"
-  #   operator: "Equal"
-  #   value: "gpu"
-  #   effect: "NoSchedule"
   
 elasticsearch:
   clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
@@ -269,11 +213,7 @@ elasticsearch:
       memory: 12Gi
     requests:
       cpu: 400m
-  # tolerations:
-  # - key: "zeebe"
-  #   operator: "Equal"
-  #   value: "gpu"
-  #   effect: "NoSchedule"
+
   volumeClaimTemplate:
     accessModes: [ "ReadWriteOnce" ]
     storageClassName: "standard"

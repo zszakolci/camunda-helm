@@ -4,22 +4,22 @@ minikube delete --all
 rm -rf $HOME/.minikube
 sleep 15
 
-minikube start --kubernetes-version=v1.26.0 --bootstrapper=kubeadm --extra-config=kubelet.authentication-token-webhook=true --extra-config=kubelet.authorization-mode=Webhook --extra-config=scheduler.bind-address=0.0.0.0 --extra-config=controller-manager.bind-address=0.0.0.0 --memory=13.5G --cpus max
+minikube start --kubernetes-version=v1.26.0 --bootstrapper=kubeadm --extra-config=kubelet.authentication-token-webhook=true --extra-config=kubelet.authorization-mode=Webhook --extra-config=scheduler.bind-address=0.0.0.0 --extra-config=controller-manager.bind-address=0.0.0.0 --memory=12.5G --cpus max
 
 kubectl create secret docker-registry dev-c8-registry \
                                       --docker-server=https://registry.camunda.cloud/ \
-                                      --docker-username=<your-camunda-username>\
-                                      --docker-password=<your-camunda-password> \
-                                      --docker-email=z<your-camunda-email>
+                                      --docker-username=yourUserName\
+                                      --docker-password='yourPassword' \
+                                      --docker-email=youremail
 
 kubectl apply -f ./secret.yaml
 
-kubectl apply --server-side -f kube-prometheus-main/manifests/setup
-kubectl wait \
-    --for condition=Established \
-    --all CustomResourceDefinition \
-    --namespace=monitoring
-kubectl apply -f kube-prometheus-main/manifests/
+#kubectl apply --server-side -f kube-prometheus-main/manifests/setup
+#kubectl wait \
+#    --for condition=Established \
+#    --all CustomResourceDefinition \
+#    --namespace=monitoring
+# kubectl apply -f kube-prometheus-main/manifests/
 
 sleep 10
 minikube addons enable ingress
@@ -44,15 +44,11 @@ helm install dev camunda/camunda-platform -f separate-ingress-values.yaml
 sleep 120
 kubectl create -f kibana.yaml
 kubectl apply -f kibana-ingress.yaml
-kubectl apply -f grafana-ingress.yaml
-# kubectl port-forward svc/dev-identity 8080:80 &
-# kubectl port-forward svc/dev-operate  8081:80 &
-# kubectl port-forward svc/dev-tasklist 8082:80 &
-# kubectl port-forward svc/dev-optimize 8083:80 &
-# kubectl port-forward svc/dev-connectors 8088:8080 &
-# kubectl port-forward svc/dev-web-modeler-webapp 8084:80 &
-# kubectl port-forward svc/dev-web-modeler-websockets 8085:80 &
-# kubectl port-forward svc/dev-zeebe-gateway 26500:26500 -n default &
-# kubectl port-forward svc/dev-keycloak 18080:80 &   
+#kubectl apply -f grafana-ingress.yaml
+
+kubectl port-forward deployment/dev-zeebe-gateway 8000:8000 &
+kubectl port-forward statefulset/dev-zeebe 8001:8000 &
+kubectl port-forward deployment/dev-operate 8002:8000 &
+kubectl port-forward deployment/dev-tasklist 8003:8000 &
 
 minikube tunnel 

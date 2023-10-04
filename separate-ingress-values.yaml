@@ -1,8 +1,6 @@
 global:
   image:
     tag: 8.2.15
-    # pullSecrets: 
-    # - name: dev-c8-registry
   identity:
     auth:
       publicIssuerUrl: "https://keycloak.local.distro.ultrawombat.com/auth/realms/camunda-platform"
@@ -39,8 +37,8 @@ connectors:
       secretName: "local-distro-ultrawombat"
 
 
-prometheusServiceMonitor:
-  enabled: true
+#prometheusServiceMonitor:
+#  enabled: true
 
 identity:
   fullURL: "https://identity.local.distro.ultrawombat.com"
@@ -81,6 +79,9 @@ identity:
       enabled: true
     
 operate:
+  env:
+    - name: JAVA_TOOL_OPTIONS
+      value: "-XX:+ExitOnOutOfMemoryError -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"
   ingress:
     enabled: true
     annotations:
@@ -93,6 +94,7 @@ operate:
   resources:
       limits:
         memory: 12Gi
+        cpu: 8
   
 optimize:
   environmentConfig:
@@ -113,8 +115,11 @@ optimize:
   resources:
       limits:
         memory: 12Gi
+        cpu: 8
 tasklist:
-
+  env:
+    - name: JAVA_TOOL_OPTIONS
+      value: "-XX:+ExitOnOutOfMemoryError -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"
   ingress:
     enabled: true
     annotations:
@@ -128,6 +133,7 @@ tasklist:
   resources:
       limits:
         memory: 12Gi
+        cpu: 8
 
 webModeler:
   enabled: true
@@ -173,13 +179,16 @@ zeebe:
   clusterSize: "1"
   partitionCount: "1"
   replicationFactor: "1"
+  env:
+    - name: JAVA_TOOL_OPTIONS
+      value: "-XX:+ExitOnOutOfMemoryError -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"
   podSecurityContext:
     fsGroup: 1001
   pvcSize: 4Gi
   resources:
     limits:
       memory: 12Gi
-      cpu: 2
+      cpu: 8
     requests:
       cpu: 400m
 
@@ -188,7 +197,7 @@ zeebe-gateway:
   affinity: {}
   env:
     - name: JAVA_TOOL_OPTIONS
-      value: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"
+      value: "-XX:+ExitOnOutOfMemoryError -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000"
   ingress:
     enabled: true
     annotations:

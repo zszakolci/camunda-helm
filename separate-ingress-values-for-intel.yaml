@@ -39,8 +39,8 @@ connectors:
 
   # image:
   #   tag: nonroot
-prometheusServiceMonitor:
-  enabled: true
+#prometheusServiceMonitor:
+#  enabled: true
 
 identity:
   fullURL: "https://identity.local.distro.ultrawombat.com"

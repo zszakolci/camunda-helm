@@ -17,7 +17,7 @@ kubectl apply -f ./secret.yaml
 
 helm repo update
 sleep 60
-helm install dev camunda/camunda-platform -f separate-ingress-values.yaml
+helm install dev camunda/camunda-platform -f separate-ingress-values-intel.yaml
 sleep 120
 
 kubectl create -f kibana.yaml

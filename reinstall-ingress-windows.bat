@@ -16,9 +16,9 @@ kubectl apply -f ./secret.yaml
 #kubectl apply -f kube-prometheus-main/manifests/
 
 helm repo update
-sleep 60
+timeout /t 60
 helm install dev camunda/camunda-platform -f separate-ingress-values-for-intel.yaml
-sleep 120
+timeout /t 120
 
 kubectl create -f kibana.yaml
 kubectl apply -f kibana-ingress.yaml

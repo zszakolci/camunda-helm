@@ -1,4 +1,4 @@
- docker pull camunda/connectors-bundle:0.21.5
+ docker pull camunda/connectors-bundle:0.23.2
  docker pull docker.elastic.co/elasticsearch/elasticsearch:7.17.10
  docker pull registry.camunda.cloud/web-modeler-ee/modeler-webapp:8.2.6
  docker pull registry.camunda.cloud/web-modeler-ee/modeler-restapi:8.2.6

@@ -1,2 +1,2 @@
-pull_camunda_windows.bat
-spinup_windows.bat
+call pull_camunda_windows.bat
+call spinup_windows.bat

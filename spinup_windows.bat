@@ -37,7 +37,7 @@ minikube image load bitnami/postgresql:15.3.0
 minikube image load kibana:7.17.10
 
 helm repo update
-helm install dev camunda/camunda-platform -f separate-ingress-values_intel.yaml
+helm install dev camunda/camunda-platform -f separate-ingress-values-for-intel.yaml
 
 timeout /t 120
 kubectl create -f kibana.yaml

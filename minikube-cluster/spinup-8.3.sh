@@ -19,9 +19,9 @@ kubectl create namespace monitoring
 
 kubectl create -n camunda secret docker-registry dev-c8-registry \
                                       --docker-server=https://registry.camunda.cloud/ \
-                                      --docker-username=zalan.szakolci \
-                                      --docker-password='fE7MFZEjYrRY56tG' \
-                                      --docker-email=zalan.szakolci@camunda.com
+                                      --docker-username=user \
+                                      --docker-password='passw' \
+                                      --docker-email=email
 
 kubectl apply -n camunda -f ./secret.yaml
 kubectl apply -n monitoring -f ./secret.yaml

@@ -14,9 +14,9 @@ kubectl apply -n camunda -f camunda-platform/secret.yaml
 kubectl apply -n monitoring -f camunda-platform/secret.yaml
 kubectl create -n camunda secret docker-registry dev-c8-registry \
                                       --docker-server=https://registry.camunda.cloud/ \
-                                      --docker-username=zalan.szakolci \
-                                      --docker-password='fE7MFZEjYrRY56tG' \
-                                      --docker-email=zalan.szakolci@camunda.com
+                                      --docker-username=user \
+                                      --docker-password='pwd' \
+                                      --docker-email=email
 
 kubectl apply --server-side -f kube-prometheus-main/manifests/setup
 kubectl wait \

@@ -1,0 +1,5 @@
+zeebe-gateway: 
+  resources:
+    limits:
+      memory: null
+      cpu: null

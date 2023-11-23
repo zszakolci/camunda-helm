@@ -1,0 +1,19 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+metadata:
+  name: ingress-contour
+name: contour
+repo: https://charts.bitnami.com/bitnami
+version: 7.10.2
+releaseName: ingress-contour
+namespace: ingress-contour
+IncludeCRDs: true
+valuesInline:
+  contour:
+    ingressClass:
+      default: true
+#   debug: true
+#   kubernetesDebug: 9
+# envoy:
+#   image:
+#     debug: true

@@ -1,0 +1,12 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+metadata:
+  name: camunda-platform
+name: camunda-platform
+repo: https://helm.camunda.io
+version: 8.3.0
+releaseName: camunda-platform
+namespace: camunda-platform
+IncludeCRDs: true
+valuesMerge: merge
+valuesFile: "helm-chart-values.yaml"

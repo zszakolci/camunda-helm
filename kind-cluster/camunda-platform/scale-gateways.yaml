@@ -1,0 +1,2 @@
+zeebe-gateway: 
+  replicas: 2

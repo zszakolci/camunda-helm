@@ -1,2 +1,0 @@
-call pull_camunda_windows.bat
-call spinup_windows.bat
